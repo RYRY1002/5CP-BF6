@@ -1,0 +1,26 @@
+{
+  "name": "portal_scripting_template",
+  "version": "1.0.0",
+  "description": "A template repo to help you make scipts for portal",
+  "homepage": "https://github.com/MagneticNeedle/PortalV2Template#readme",
+  "bugs": {
+    "url": "https://github.com/MagneticNeedle/PortalV2Template/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MagneticNeedle/PortalV2Template/issues"
+  },
+  "license": "ISC",
+  "author": "MagneticNeedle <https://github.com/MagneticNeedle/>",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./esbuild.config.mjs",
+    "dev": "node ./esbuild.config.mjs"
+
+  },
+  "devDependencies": {
+    "esbuild": "0.25.11",
+    "typescript": "^5.9.3"
+  }
+}

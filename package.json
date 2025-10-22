@@ -1,17 +1,20 @@
 {
-  "name": "portal_scripting_template",
-  "version": "1.0.0",
-  "description": "A template repo to help you make scipts for portal",
-  "homepage": "https://github.com/MagneticNeedle/PortalV2Template#readme",
+  "name": "5CP",
+  "version": "dev",
+  "description": "The 5CP game mode from Team Fortress 2, implemented in Battlefield 6.",
+  "homepage": "https://github.com/RYRY1002/5CP-BF6/#readme",
   "bugs": {
-    "url": "https://github.com/MagneticNeedle/PortalV2Template/issues"
+    "url": "https://github.com/5CP-BF6/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MagneticNeedle/PortalV2Template/issues"
+    "url": "https://github.com/RYRY1002/5CP-BF6"
   },
   "license": "ISC",
-  "author": "MagneticNeedle <https://github.com/MagneticNeedle/>",
+  "author": {
+    "name": "RYRY1002",
+    "url": "https://riley.technology/"
+  },
   "type": "commonjs",
   "main": "index.js",
   "scripts": {

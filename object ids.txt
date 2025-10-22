@@ -1,6 +1,11 @@
 1-5 = Objectives
 6-11 = Sectors
 
+12 = Voiceover
+
+51 = AI Spawner Blu
+52 = AI Spawner Red
+
 101 = SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnEnter_OneShot2D
 102 = SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnExit_OneShot2D
 103 = SFX_UI_Gamemode_Shared_CaptureObjectives_CaptureNeutralize_OneShot2D

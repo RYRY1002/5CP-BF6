@@ -1,10 +1,12 @@
-[gd_scene load_steps=17 format=3 uid="uid://bhf5owi4opq6m"]
+[gd_scene load_steps=20 format=3 uid="uid://bhf5owi4opq6m"]
 
 [ext_resource type="PackedScene" path="res://static/MP_Abbasid_Terrain.tscn" id="1_pivop"]
 [ext_resource type="PackedScene" path="res://static/MP_Abbasid_Assets.tscn" id="2_vcx4r"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Conquest/CapturePoint.tscn" id="7_8qohs"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/VehicleSpawner.tscn" id="7_h8og6"]
+[ext_resource type="PackedScene" path="res://objects/Gameplay/AI/AI_Spawner.tscn" id="8_365te"]
 [ext_resource type="PackedScene" uid="uid://jv31so3xcr7p" path="res://addons/bf_portal/portal_tools/types/PolygonVolume/PolygonVolume.tscn" id="8_j8b0f"]
+[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/InteractPoint.tscn" id="8_o6cb1"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/HQ_PlayerSpawner.tscn" id="10_7vcn5"]
 [ext_resource type="PackedScene" path="res://objects/entities/SpawnPoint.tscn" id="11_a8rdj"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnEnter_OneShot2D.tscn" id="11_jvdww"]
@@ -16,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D.tscn" id="14_vcx4r"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_AreaUnlock_OneShot2D.tscn" id="15_x31xk"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_ObjetiveUnlockReveal_OneShot2D.tscn" id="16_o6cb1"]
+[ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_VOModule_OneShot2D.tscn" id="18_ilt24"]
 
 [node name="MP_Abbasid" type="Node3D"]
 
@@ -104,7 +107,7 @@ AltTeam = 0
 VehicleSpawnersEnabled = true
 ObjId = 11
 HQArea = NodePath("HQ_Blu")
-InfantrySpawns = [NodePath("Group 1/SpawnPoint_1_1"), NodePath("Group 1/SpawnPoint_1_2"), NodePath("Group 1/SpawnPoint_1_3"), NodePath("Group 1/SpawnPoint_1_4"), NodePath("Group 1/SpawnPoint_1_5"), NodePath("Group 1/SpawnPoint_1_6"), NodePath("Group 1/SpawnPoint_1_7"), NodePath("Group 1/SpawnPoint_1_8"), NodePath("Group 2/SpawnPoint_1_9"), NodePath("Group 2/SpawnPoint_1_10"), NodePath("Group 2/SpawnPoint_1_11"), NodePath("Group 2/SpawnPoint_1_12"), NodePath("Group 2/SpawnPoint_1_13"), NodePath("Group 2/SpawnPoint_1_14"), NodePath("Group 2/SpawnPoint_1_15"), NodePath("Group 2/SpawnPoint_1_16")]
+InfantrySpawns = [NodePath("Group 1/SpawnPoint_1_1"), NodePath("Group 1/SpawnPoint_1_2"), NodePath("Group 1/SpawnPoint_1_3"), NodePath("Group 1/SpawnPoint_1_4"), NodePath("Group 1/SpawnPoint_1_5"), NodePath("Group 1/SpawnPoint_1_6"), NodePath("Group 1/SpawnPoint_1_7"), NodePath("Group 1/SpawnPoint_1_8"), NodePath("Group 2/SpawnPoint_2_1"), NodePath("Group 2/SpawnPoint_2_2"), NodePath("Group 2/SpawnPoint_2_3"), NodePath("Group 2/SpawnPoint_2_4"), NodePath("Group 2/SpawnPoint_2_5"), NodePath("Group 2/SpawnPoint_2_6"), NodePath("Group 2/SpawnPoint_2_7"), NodePath("Group 2/SpawnPoint_2_8")]
 
 [node name="HQ_Blu" parent="Gameplay/Spawns/HQ_Blu" instance=ExtResource("8_j8b0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 299.66, -9.7387, -62.2147)
@@ -141,29 +144,85 @@ transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818
 [node name="Group 2" type="Node3D" parent="Gameplay/Spawns/HQ_Blu"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.404, 0.128456, 24.1369)
 
-[node name="SpawnPoint_1_9" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_1" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(0.0152535, 0, 0.999884, 0, 1, 0, -0.999884, 0, 0.0152535, 0, 0, -3)
 
-[node name="SpawnPoint_1_10" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_2" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0316198, 0, 0.9995, 0, 1, 0, -0.9995, 0, -0.0316198, 3, 0, 0)
 
-[node name="SpawnPoint_1_11" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_3" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0428871, 0, 0.99908, 0, 1, 0, -0.99908, 0, -0.0428871, -3, 0, 0)
 
-[node name="SpawnPoint_1_12" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_4" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, 0, 0, 3)
 
-[node name="SpawnPoint_1_13" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_5" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, 2.63864, 0, 2.77708)
 
-[node name="SpawnPoint_1_14" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_6" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, 2.79977, 0, -2.9159)
 
-[node name="SpawnPoint_1_15" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_7" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.17166, 0, -3.37088)
 
-[node name="SpawnPoint_1_16" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
+[node name="SpawnPoint_2_8" parent="Gameplay/Spawns/HQ_Blu/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.5152, 0, 3.07727)
+
+[node name="AI_Spawner" parent="Gameplay/Spawns/HQ_Blu" node_paths=PackedStringArray("AlternateSpawns") instance=ExtResource("8_365te")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+ObjId = 51
+AlternateSpawns = [NodePath("AI_SpawnPoint_1_1"), NodePath("AI_SpawnPoint_1_2"), NodePath("AI_SpawnPoint_1_3"), NodePath("AI_SpawnPoint_1_4"), NodePath("AI_SpawnPoint_1_5"), NodePath("AI_SpawnPoint_1_6"), NodePath("AI_SpawnPoint_1_7"), NodePath("AI_SpawnPoint_1_8"), NodePath("Group 2/AI_SpawnPoint_2_1"), NodePath("Group 2/AI_SpawnPoint_2_2"), NodePath("Group 2/AI_SpawnPoint_2_3"), NodePath("Group 2/AI_SpawnPoint_2_4"), NodePath("Group 2/AI_SpawnPoint_2_5"), NodePath("Group 2/AI_SpawnPoint_2_6"), NodePath("Group 2/AI_SpawnPoint_2_7"), NodePath("Group 2/AI_SpawnPoint_2_8")]
+
+[node name="AI_SpawnPoint_1_1" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="AI_SpawnPoint_1_2" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+
+[node name="AI_SpawnPoint_1_3" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+
+[node name="AI_SpawnPoint_1_4" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+
+[node name="AI_SpawnPoint_1_5" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="AI_SpawnPoint_1_6" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+
+[node name="AI_SpawnPoint_1_7" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+
+[node name="AI_SpawnPoint_1_8" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
+
+[node name="Group 2" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0, 12.7152)
+
+[node name="AI_SpawnPoint_2_1" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+
+[node name="AI_SpawnPoint_2_2" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 3)
+
+[node name="AI_SpawnPoint_2_3" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 3)
+
+[node name="AI_SpawnPoint_2_4" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+
+[node name="AI_SpawnPoint_2_5" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="AI_SpawnPoint_2_6" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, -3)
+
+[node name="AI_SpawnPoint_2_7" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
+
+[node name="AI_SpawnPoint_2_8" parent="Gameplay/Spawns/HQ_Blu/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
 
 [node name="VehicleSpawner" parent="Gameplay/Spawns/HQ_Blu" instance=ExtResource("7_h8og6")]
 transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 53.5949, 2.64622, 28.0115)
@@ -212,10 +271,10 @@ transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.5152, 0, 3.07727)
 
 [node name="Group 2" type="Node3D" parent="Gameplay/Spawns/HQ_Red"]
-transform = Transform3D(-0.733765, 0, -0.679403, 0, 1, 0, 0.679403, 0, -0.733765, 12.067, 0, 22.0201)
+transform = Transform3D(-0.707107, 0, 0.707106, 0, 1, 0, -0.707106, 0, -0.707107, -3.6401, 0, 42.313)
 
 [node name="SpawnPoint_1_9" parent="Gameplay/Spawns/HQ_Red/Group 2" instance=ExtResource("11_a8rdj")]
-transform = Transform3D(0.0152535, 0, 0.999884, 0, 1, 0, -0.999884, 0, 0.0152535, 0, 0.526623, -3)
+transform = Transform3D(0.0152535, 0, 0.999884, 0, 1, 0, -0.999884, 0, 0.0152535, 0, 0, -3)
 
 [node name="SpawnPoint_1_10" parent="Gameplay/Spawns/HQ_Red/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0316198, 0, 0.9995, 0, 1, 0, -0.9995, 0, -0.0316198, 3, 0, 0)
@@ -233,69 +292,124 @@ transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, 2.79977, 0, -2.9159)
 
 [node name="SpawnPoint_1_15" parent="Gameplay/Spawns/HQ_Red/Group 2" instance=ExtResource("11_a8rdj")]
-transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.17166, 1.22692, -3.37088)
+transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.172, 0, -3.371)
 
 [node name="SpawnPoint_1_16" parent="Gameplay/Spawns/HQ_Red/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.5152, 0, 3.07727)
 
-[node name="Sector_CapturePoint_1" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "AdvanceToArea", "CapturePoints") instance=ExtResource("12_4gnkx")]
+[node name="AI_Spawner" parent="Gameplay/Spawns/HQ_Red" node_paths=PackedStringArray("AlternateSpawns") instance=ExtResource("8_365te")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 12, 0, 29)
+ObjId = 52
+AlternateSpawns = [NodePath("AI_SpawnPoint_1_1"), NodePath("AI_SpawnPoint_1_2"), NodePath("AI_SpawnPoint_1_3"), NodePath("AI_SpawnPoint_1_4"), NodePath("AI_SpawnPoint_1_5"), NodePath("AI_SpawnPoint_1_6"), NodePath("AI_SpawnPoint_1_7"), NodePath("AI_SpawnPoint_1_8"), NodePath("Group 2/AI_SpawnPoint_2_1"), NodePath("Group 2/AI_SpawnPoint_2_2"), NodePath("Group 2/AI_SpawnPoint_2_3"), NodePath("Group 2/AI_SpawnPoint_2_4"), NodePath("Group 2/AI_SpawnPoint_2_5"), NodePath("Group 2/AI_SpawnPoint_2_6"), NodePath("Group 2/AI_SpawnPoint_2_7"), NodePath("Group 2/AI_SpawnPoint_2_8")]
+
+[node name="AI_SpawnPoint_1_1" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0996513, 3)
+
+[node name="AI_SpawnPoint_1_2" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.100666, 3)
+
+[node name="AI_SpawnPoint_1_3" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.0913391, 3)
+
+[node name="AI_SpawnPoint_1_4" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.260651, 0)
+
+[node name="AI_SpawnPoint_1_5" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.0788078, 0)
+
+[node name="AI_SpawnPoint_1_6" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.0961533, -3)
+
+[node name="AI_SpawnPoint_1_7" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.290199, -3)
+
+[node name="AI_SpawnPoint_1_8" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.636295, -3)
+
+[node name="Group 2" parent="Gameplay/Spawns/HQ_Red/AI_Spawner" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(0.258819, 0, 0.965926, 0, 1, 0, -0.965926, 0, 0.258819, -46.3531, -0.1423, 0.367188)
+
+[node name="AI_SpawnPoint_2_1" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.242153, 3)
+
+[node name="AI_SpawnPoint_2_2" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.59539, 3)
+
+[node name="AI_SpawnPoint_2_3" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.184166, 3)
+
+[node name="AI_SpawnPoint_2_4" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.158257, 0)
+
+[node name="AI_SpawnPoint_2_5" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
+
+[node name="AI_SpawnPoint_2_6" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.0559998, -3)
+
+[node name="AI_SpawnPoint_2_7" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0894814, -3)
+
+[node name="AI_SpawnPoint_2_8" parent="Gameplay/Spawns/HQ_Red/AI_Spawner/Group 2" instance=ExtResource("11_a8rdj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, -3)
+
+[node name="Sector_CapturePoint-Lettering" parent="Gameplay" node_paths=PackedStringArray("CapturePoints") instance=ExtResource("12_4gnkx")]
 ObjId = 6
+CapturePoints = [NodePath("../Control points/CapturePoint_1"), NodePath("../Control points/CapturePoint_2"), NodePath("../Control points/CapturePoint_3"), NodePath("../Control points/CapturePoint_4"), NodePath("../Control points/CapturePoint_5")]
+
+[node name="Sector_CapturePoint_1" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "AdvanceToArea") instance=ExtResource("12_4gnkx")]
+ObjId = 7
 SectorArea = NodePath("CollisionPolygon3D")
 AdvanceToArea = NodePath("../Sector_CapturePoint_2/CollisionPolygon3D")
-CapturePoints = [NodePath("../Control points/CapturePoint_1")]
 
 [node name="CollisionPolygon3D" parent="Gameplay/Sector_CapturePoint_1" instance=ExtResource("8_j8b0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 56.99, 0)
 points = PackedVector2Array(-187.992, -60.3136, -200.613, -59.2482, -205.612, -38.5352, -226.925, -27.3281, -227.4, -9.52571, -239.98, -8.9323, -240.147, -0.553946, -257.045, 0.0461061, -256.835, 10.8951, -263.521, 10.8396, -262.595, 141.502, -226.138, 137.121, -227.226, 112.629, -214.755, 112.768, -206.528, 121.968, -194.636, 123.613, -188.374, 123.547)
 height = 100.0
 
-[node name="Sector_CapturePoint_2" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatArea", "RetreatFromArea", "AdvanceFromArea", "AdvanceToArea", "CapturePoints") instance=ExtResource("12_4gnkx")]
-ObjId = 7
+[node name="Sector_CapturePoint_2" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatArea", "RetreatFromArea", "AdvanceFromArea", "AdvanceToArea") instance=ExtResource("12_4gnkx")]
+ObjId = 8
 SectorArea = NodePath("CollisionPolygon3D")
 RetreatArea = NodePath("../Sector_CapturePoint_3/CollisionPolygon3D")
 RetreatFromArea = NodePath("../Sector_CapturePoint_1/CollisionPolygon3D")
 AdvanceFromArea = NodePath("../Sector_CapturePoint_1/CollisionPolygon3D")
 AdvanceToArea = NodePath("../Sector_CapturePoint_3/CollisionPolygon3D")
-CapturePoints = [NodePath("../Control points/CapturePoint_2")]
 
 [node name="CollisionPolygon3D" parent="Gameplay/Sector_CapturePoint_2" instance=ExtResource("8_j8b0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 56.99, 0)
 points = PackedVector2Array(-121.174, -88.3255, -128.593, -83.2263, -139.971, -83.108, -168.181, -66.2023, -181.319, -60.8776, -187.992, -60.3136, -188.374, 123.547, -123.943, 122.862)
 height = 100.0
 
-[node name="Sector_CapturePoint_3" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatArea", "RetreatFromArea", "AdvanceFromArea", "AdvanceToArea", "CapturePoints") instance=ExtResource("12_4gnkx")]
-ObjId = 8
+[node name="Sector_CapturePoint_3" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatArea", "RetreatFromArea", "AdvanceFromArea", "AdvanceToArea") instance=ExtResource("12_4gnkx")]
+ObjId = 9
 SectorArea = NodePath("CollisionPolygon3D")
 RetreatArea = NodePath("../Sector_CapturePoint_4/CollisionPolygon3D")
 RetreatFromArea = NodePath("../Sector_CapturePoint_2/CollisionPolygon3D")
 AdvanceFromArea = NodePath("../Sector_CapturePoint_2/CollisionPolygon3D")
 AdvanceToArea = NodePath("../Sector_CapturePoint_4/CollisionPolygon3D")
-CapturePoints = [NodePath("../Control points/CapturePoint_3")]
 
 [node name="CollisionPolygon3D" parent="Gameplay/Sector_CapturePoint_3" instance=ExtResource("8_j8b0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 56.99, 0)
 points = PackedVector2Array(-95.5116, -105.887, -121.174, -88.3255, -123.943, 122.862, -96.5864, 122.566, -96.3346, 105.654, -68.1214, 104.609, -45.649, 97.6191, -45.376, 65.6605, -37.587, 65.629, -36.7779, -110.7, -67.4831, -110.693)
 height = 100.0
 
-[node name="Sector_CapturePoint_4" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatArea", "RetreatFromArea", "AdvanceFromArea", "AdvanceToArea", "CapturePoints") instance=ExtResource("12_4gnkx")]
-ObjId = 9
+[node name="Sector_CapturePoint_4" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatArea", "RetreatFromArea", "AdvanceFromArea", "AdvanceToArea") instance=ExtResource("12_4gnkx")]
+ObjId = 10
 SectorArea = NodePath("CollisionPolygon3D")
 RetreatArea = NodePath("../Sector_CapturePoint_5/CollisionPolygon3D")
 RetreatFromArea = NodePath("../Sector_CapturePoint_3/CollisionPolygon3D")
 AdvanceFromArea = NodePath("../Sector_CapturePoint_3/CollisionPolygon3D")
 AdvanceToArea = NodePath("../Sector_CapturePoint_5/CollisionPolygon3D")
-CapturePoints = [NodePath("../Control points/CapturePoint_4")]
 
 [node name="CollisionPolygon3D" parent="Gameplay/Sector_CapturePoint_4" instance=ExtResource("8_j8b0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 56.99, 0)
 points = PackedVector2Array(-37.587, 65.629, -4.72801, 65.4958, 10.8436, 55.1037, 41.9588, 61.5309, 44.029, -119.053, 36.9601, -119.104, 36.5861, -111.625, 35.1651, -111.625, 35.3353, -108.712, 24.0568, -108.51, 25.7648, -126.309, -6.30969, -126.639, -5.3859, -110.708, -36.7779, -110.7)
 height = 100.0
 
-[node name="Sector_CapturePoint_5" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatFromArea", "CapturePoints") instance=ExtResource("12_4gnkx")]
-ObjId = 10
+[node name="Sector_CapturePoint_5" parent="Gameplay" node_paths=PackedStringArray("SectorArea", "RetreatFromArea") instance=ExtResource("12_4gnkx")]
+ObjId = 11
 SectorArea = NodePath("CollisionPolygon3D")
 RetreatFromArea = NodePath("../Sector_CapturePoint_4/CollisionPolygon3D")
-CapturePoints = [NodePath("../Control points/CapturePoint_5")]
 
 [node name="CollisionPolygon3D" parent="Gameplay/Sector_CapturePoint_5" instance=ExtResource("8_j8b0f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 56.99, 0)
@@ -335,3 +449,10 @@ ObjId = 105
 
 [node name="SFX_UI_Gamemode_Shared_CaptureObjectives_ObjetiveUnlockReveal_OneShot2D" parent="Sounds" instance=ExtResource("16_o6cb1")]
 ObjId = 106
+
+[node name="Voiceover" parent="Sounds" instance=ExtResource("18_ilt24")]
+ObjId = 12
+
+[node name="InteractPoint" parent="." instance=ExtResource("8_o6cb1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -277.696, 67.8389, 55.7796)
+ObjId = 1000

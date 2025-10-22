@@ -1,0 +1,11 @@
+{
+  "scoreboard": {
+    "red": "Red",
+    "blu": "Blu",
+    "score": "Score",
+    "captures": "Captures",
+    "defenses": "Defenses",
+    "kills": "Kills",
+    "revives": "Revives"
+  }
+}

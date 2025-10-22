@@ -6,7 +6,7 @@
     "strict": true,
     "outDir": "dist",
     "types": [
-      "./sdk/types"
+      "./sdk/mod"
     ],
     "paths": {
       "modlib": [

@@ -1,6 +1,7 @@
 import * as modlib from "modlib";
 import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu } from "./includes/constants";
 import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnRevive } from "./includes/scoreboard";
+import { SetupTimeUI, UpdateTimeUI } from "./includes/ui";
 
 let firstCapComplete = false;
 
@@ -32,9 +33,33 @@ export async function OnGameModeStarted(): Promise<void> {
 	mod.SetCapturePointCapturingTime(capturePoint5, 0);
 
 	SetupScoreboard();
+	SetupTimeUI();
+
+	// We do all logic related to the round timer here instead of in OngoingGlobal to avoid an issue where all logic stops being executed after ~5 minutes and 15 seconds
+	while (true) {
+		let timeRemaining = mod.GetMatchTimeRemaining();
+
+		if (timeRemaining <= 0) {
+			mod.EndGameMode(mod.GetTeam(0)); // Stalemate
+		}
+		else if (mod.RoundToInteger(timeRemaining) == 180) {
+			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.TimeLow, mod.VoiceOverFlags.Alpha);
+		}
+		else if (mod.RoundToInteger(timeRemaining) == 60) {
+			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.Time60Left, mod.VoiceOverFlags.Alpha);
+		}
+		else if (mod.RoundToInteger(timeRemaining) == 30) {
+			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.Time30Left, mod.VoiceOverFlags.Alpha);
+		}
+
+		UpdateTimeUI(timeRemaining);
+		await mod.Wait(1);
+	}
 }
 
 export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint): Promise<void> {
+	ResetTime();
+
 	let capturingTeam = mod.GetCurrentOwnerTeam(eventCapturePoint);
 
 	let playersOnPointOnCapturingTeam = modlib.FilteredArray(mod.GetPlayersOnPoint(eventCapturePoint), (player) => {
@@ -172,4 +197,10 @@ export async function OnPlayerEnterCapturePoint(eventPlayer: mod.Player, eventCa
 
 export async function OnPlayerExitCapturePoint(eventPlayer: mod.Player, eventCapturePoint: mod.CapturePoint): Promise<void> {
 	mod.PlaySound(102, 1, eventPlayer); // SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnExit_OneShot2D
+}
+
+async function ResetTime(): Promise<void> {
+	mod.ResetGameModeTime();
+	await mod.Wait(2);
+	mod.PauseGameModeTime(false);
 }

@@ -1,5 +1,5 @@
 import * as modlib from "modlib";
-import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VO } from "./includes/constants";
+import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu } from "./includes/constants";
 import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnRevive } from "./includes/scoreboard";
 import { OnPlayerInteract as SpawnBots } from "./includes/bots";
 
@@ -36,8 +36,10 @@ export async function OnGameModeStarted(): Promise<void> {
 }
 
 export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint): Promise<void> {
+	let capturingTeam = mod.GetCurrentOwnerTeam(eventCapturePoint);
+
 	let playersOnPointOnCapturingTeam = modlib.FilteredArray(mod.GetPlayersOnPoint(eventCapturePoint), (player) => {
-		return mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), mod.GetTeam(player));
+		return mod.Equals(capturingTeam, mod.GetTeam(player));
 	});
 	for (let i = 0; i < mod.CountOf(playersOnPointOnCapturingTeam); i++) {
 		mod.PlaySound(104, 1, mod.ValueInArray(playersOnPointOnCapturingTeam, i)); // SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D
@@ -47,17 +49,19 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 
 	if (!firstCapComplete) {
 		firstCapComplete = true;
-
-		mod.PlayVO(VO, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, mod.GetCurrentOwnerTeam(eventCapturePoint));
-		mod.PlayVO(VO, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, mod.GetCurrentOwnerTeam(eventCapturePoint) == teamBlu ? teamRed : teamBlu);
-		await mod.Wait(3);
-		if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamRed)) {
+		if (mod.Equals(capturingTeam, teamRed)) {
+			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
+			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
 			mod.EnableGameModeObjective(capturePoint2, true);
-			mod.PlayVO(VO, mod.VoiceOverEvents2D.ObjectiveLocated, mod.VoiceOverFlags.Bravo);
+			await mod.Wait(1);
+			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.ObjectiveLocated, mod.VoiceOverFlags.Bravo);
 		}
-		else if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamBlu)) {
+		else if (mod.Equals(capturingTeam, teamBlu)) {
+			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamBlu);
+			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamRed);
 			mod.EnableGameModeObjective(capturePoint4, true);
-			mod.PlayVO(VO, mod.VoiceOverEvents2D.ObjectiveLocated, mod.VoiceOverFlags.Delta);
+			await mod.Wait(1);
+			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.ObjectiveLocated, mod.VoiceOverFlags.Delta);
 		}
 
 		mod.SetCapturePointNeutralizationTime(capturePoint3, 24);
@@ -72,52 +76,85 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.AIMoveToBehavior(mod.ValueInArray(allPlayers, i), mod.GetObjectPosition(capturePoint2));
 			}
 		}
+
+		// We need the if checks again because we need to set capturePoint3's times before playing the next VO
+		await mod.Wait(20);
+		if (mod.Equals(capturingTeam, teamRed)) {
+			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ProgressEarlyWinning, mod.VoiceOverFlags.Charlie, teamRed);
+			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ProgressEarlyLosing, mod.VoiceOverFlags.Charlie, teamBlu);
+		}
+		else if (mod.Equals(capturingTeam, teamBlu)) {
+			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ProgressEarlyWinning, mod.VoiceOverFlags.Charlie, teamBlu);
+			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ProgressEarlyLosing, mod.VoiceOverFlags.Charlie, teamRed);
+		}
 	}
 
 	if (firstCapComplete) {
 		if (mod.Equals(eventCapturePoint, capturePoint1)) {
-			if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamRed)) {
+			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EndGameMode(teamRed);
 			}
-			else if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamBlu)) {
+			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint2, true);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Alpha, teamBlu);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Alpha, teamRed);
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint2)) {
-			if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamRed)) {
+			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint1, true);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Bravo, teamRed);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Bravo, teamBlu);
+				await mod.Wait(7);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ProgressLateWinning, mod.VoiceOverFlags.Bravo, teamRed);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ProgressLateLosing, mod.VoiceOverFlags.Bravo, teamBlu);
 			}
-			else if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamBlu)) {
+			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.EnableGameModeObjective(capturePoint1, false);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Bravo, teamBlu);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Bravo, teamRed);
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint3)) {
-			if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamRed)) {
+			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint2, true);
 				mod.EnableGameModeObjective(capturePoint4, false);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
 			}
-			else if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamBlu)) {
+			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint2, false);
 				mod.EnableGameModeObjective(capturePoint4, true);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamBlu);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamRed);
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint4)) {
-			if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamRed)) {
+			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.EnableGameModeObjective(capturePoint5, false);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Delta, teamRed);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Delta, teamBlu);
 			}
-			else if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamBlu)) {
+			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint5, true);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Delta, teamBlu);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Delta, teamRed);
+				await mod.Wait(7);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ProgressLateWinning, mod.VoiceOverFlags.Delta, teamBlu);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ProgressLateLosing, mod.VoiceOverFlags.Delta, teamRed);
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint5)) {
-			if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamRed)) {
+			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint4, true);
+				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Echo, teamRed);
+				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Echo, teamBlu);
 			}
-			else if (mod.Equals(mod.GetCurrentOwnerTeam(eventCapturePoint), teamBlu)) {
+			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EndGameMode(teamBlu);
 			}
 		}

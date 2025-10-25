@@ -11,4 +11,8 @@ export const capturesPlayerVar = 0;
 export const defensesPlayerVar = 1;
 export const revivesPlayerVar = 2;
 
-export const VO = mod.GetVO(12);
+export const VOGlobal = mod.GetVO(12);
+export const VOBlu = mod.GetVO(13);
+export const VORed = mod.GetVO(14);
+
+export const timeLimit = 600;

@@ -450,8 +450,14 @@ ObjId = 105
 [node name="SFX_UI_Gamemode_Shared_CaptureObjectives_ObjetiveUnlockReveal_OneShot2D" parent="Sounds" instance=ExtResource("16_o6cb1")]
 ObjId = 106
 
-[node name="Voiceover" parent="Sounds" instance=ExtResource("18_ilt24")]
+[node name="Voiceover_Global" parent="Sounds" instance=ExtResource("18_ilt24")]
 ObjId = 12
+
+[node name="Voiceover_Blu" parent="Sounds" instance=ExtResource("18_ilt24")]
+ObjId = 13
+
+[node name="Voiceover_Red" parent="Sounds" instance=ExtResource("18_ilt24")]
+ObjId = 14
 
 [node name="InteractPoint" parent="." instance=ExtResource("8_o6cb1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -277.696, 67.8389, 55.7796)

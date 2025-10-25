@@ -2,6 +2,8 @@
 6-11 = Sectors
 
 12 = Voiceover
+13 = Voiceover Blu
+14 = Voiceover Red
 
 51 = AI Spawner Blu
 52 = AI Spawner Red

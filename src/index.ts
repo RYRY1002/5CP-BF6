@@ -1,7 +1,6 @@
 import * as modlib from "modlib";
 import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu } from "./includes/constants";
 import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnRevive } from "./includes/scoreboard";
-import { OnPlayerInteract as SpawnBots } from "./includes/bots";
 
 let firstCapComplete = false;
 
@@ -66,16 +65,6 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 
 		mod.SetCapturePointNeutralizationTime(capturePoint3, 24);
 		mod.SetCapturePointCapturingTime(capturePoint3, 0);
-
-		let allPlayers = mod.AllPlayers();
-		for (let i = 0; i < mod.CountOf(allPlayers); i++) {
-			if (mod.GetTeam(mod.ValueInArray(allPlayers, i)) === teamBlu) {
-				mod.AIMoveToBehavior(mod.ValueInArray(allPlayers, i), mod.GetObjectPosition(capturePoint4));
-			}
-			else if (mod.GetTeam(mod.ValueInArray(allPlayers, i)) === teamRed) {
-				mod.AIMoveToBehavior(mod.ValueInArray(allPlayers, i), mod.GetObjectPosition(capturePoint2));
-			}
-		}
 
 		// We need the if checks again because we need to set capturePoint3's times before playing the next VO
 		await mod.Wait(20);
@@ -183,8 +172,4 @@ export async function OnPlayerEnterCapturePoint(eventPlayer: mod.Player, eventCa
 
 export async function OnPlayerExitCapturePoint(eventPlayer: mod.Player, eventCapturePoint: mod.CapturePoint): Promise<void> {
 	mod.PlaySound(102, 1, eventPlayer); // SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnExit_OneShot2D
-}
-
-export async function OnPlayerInteract(eventPlayer: mod.Player, eventInteractPoint: mod.InteractPoint): Promise<void> {
-	SpawnBots(eventPlayer, eventInteractPoint);
 }

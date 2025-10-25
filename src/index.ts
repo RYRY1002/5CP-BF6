@@ -1,7 +1,7 @@
 import * as modlib from "modlib";
 import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu } from "./includes/constants";
 import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnRevive } from "./includes/scoreboard";
-import { SetupTimeUI, UpdateTimeUI } from "./includes/ui";
+import { SetupCapturePointUI, SetupTimeUI, UpdateCapturePointUI, UpdateTimeUI } from "./includes/ui";
 
 let firstCapComplete = false;
 
@@ -34,6 +34,12 @@ export async function OnGameModeStarted(): Promise<void> {
 
 	SetupScoreboard();
 	SetupTimeUI();
+	SetupCapturePointUI();
+	UpdateCapturePointUI(1, teamBlu);
+	UpdateCapturePointUI(2, teamBlu);
+	UpdateCapturePointUI(3, mod.GetTeam(0)); // Neutral
+	UpdateCapturePointUI(4, teamRed);
+	UpdateCapturePointUI(5, teamRed);
 
 	// We do all logic related to the round timer here instead of in OngoingGlobal to avoid an issue where all logic stops being executed after ~5 minutes and 15 seconds
 	while (true) {
@@ -69,10 +75,10 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 		mod.PlaySound(104, 1, mod.ValueInArray(playersOnPointOnCapturingTeam, i)); // SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D
 		UpdateScoreboardForPlayerOnCapturePoint(mod.ValueInArray(playersOnPointOnCapturingTeam, i));
 	}
-	console.log("Players on point: " + mod.CountOf(mod.GetPlayersOnPoint(eventCapturePoint)));
 
 	if (!firstCapComplete) {
 		firstCapComplete = true;
+		UpdateCapturePointUI(3, capturingTeam);
 		if (mod.Equals(capturingTeam, teamRed)) {
 			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
 			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
@@ -105,6 +111,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 
 	if (firstCapComplete) {
 		if (mod.Equals(eventCapturePoint, capturePoint1)) {
+			UpdateCapturePointUI(1, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EndGameMode(teamRed);
 			}
@@ -115,6 +122,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint2)) {
+			UpdateCapturePointUI(2, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint1, true);
@@ -132,6 +140,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint3)) {
+			UpdateCapturePointUI(3, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint2, true);
 				mod.EnableGameModeObjective(capturePoint4, false);
@@ -146,6 +155,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint4)) {
+			UpdateCapturePointUI(4, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.EnableGameModeObjective(capturePoint5, false);
@@ -163,6 +173,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			}
 		}
 		else if (mod.Equals(eventCapturePoint, capturePoint5)) {
+			UpdateCapturePointUI(5, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint4, true);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Echo, teamRed);

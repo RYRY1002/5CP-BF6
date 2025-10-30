@@ -4,6 +4,7 @@ import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOn
 import { SetupCapturePointUI, SetupTimeUI, UpdateCapturePointUI, UpdateTimeUI } from "./includes/ui";
 
 let firstCapComplete = false;
+let timerWasReset = false;
 
 export async function OnGameModeStarted(): Promise<void> {
 	mod.EnableGameModeObjective(capturePoint1, false);
@@ -43,6 +44,12 @@ export async function OnGameModeStarted(): Promise<void> {
 
 	// We do all logic related to the round timer here instead of in OngoingGlobal to avoid an issue where all logic stops being executed after ~5 minutes and 15 seconds
 	while (true) {
+		if (timerWasReset) {
+			await mod.Wait(1);
+			timerWasReset = false;
+			continue;
+		}
+
 		let timeRemaining = mod.GetMatchTimeRemaining();
 
 		if (timeRemaining <= 0) {
@@ -210,8 +217,15 @@ export async function OnPlayerExitCapturePoint(eventPlayer: mod.Player, eventCap
 	mod.PlaySound(102, 1, eventPlayer); // SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnExit_OneShot2D
 }
 
+export async function OnGameModeEnding(): Promise<void> {
+	// If we don't delete the UI widgets, they persist during the post-game flow
+	mod.DeleteAllUIWidgets();
+}
+
 async function ResetTime(): Promise<void> {
+	timerWasReset = true;
 	mod.ResetGameModeTime();
-	await mod.Wait(2);
+	UpdateTimeUI(600);
+	await mod.Wait(1);
 	mod.PauseGameModeTime(false);
 }

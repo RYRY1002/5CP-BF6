@@ -1,6 +1,6 @@
 {
   "name": "5CP",
-  "version": "dev",
+  "version": "1.0.0",
   "description": "The 5CP game mode from Team Fortress 2, implemented in Battlefield 6.",
   "homepage": "https://github.com/RYRY1002/5CP-BF6/#readme",
   "bugs": {

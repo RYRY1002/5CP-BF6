@@ -1,11 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://bhf5owi4opq6m"]
+[gd_scene load_steps=22 format=3 uid="uid://bhf5owi4opq6m"]
 
 [ext_resource type="PackedScene" path="res://static/MP_Abbasid_Terrain.tscn" id="1_pivop"]
 [ext_resource type="PackedScene" path="res://static/MP_Abbasid_Assets.tscn" id="2_vcx4r"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Conquest/CapturePoint.tscn" id="7_8qohs"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/VehicleSpawner.tscn" id="7_h8og6"]
 [ext_resource type="PackedScene" uid="uid://jv31so3xcr7p" path="res://addons/bf_portal/portal_tools/types/PolygonVolume/PolygonVolume.tscn" id="8_j8b0f"]
-[ext_resource type="PackedScene" path="res://objects/Gameplay/Common/InteractPoint.tscn" id="8_o6cb1"]
 [ext_resource type="PackedScene" path="res://objects/Gameplay/Common/HQ_PlayerSpawner.tscn" id="10_7vcn5"]
 [ext_resource type="PackedScene" path="res://objects/entities/SpawnPoint.tscn" id="11_a8rdj"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_ObjectiveOnEnter_OneShot2D.tscn" id="11_jvdww"]
@@ -17,7 +16,11 @@
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D.tscn" id="14_vcx4r"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_AreaUnlock_OneShot2D.tscn" id="15_x31xk"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_CaptureObjectives_ObjetiveUnlockReveal_OneShot2D.tscn" id="16_o6cb1"]
+[ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_Intro_Countdown_OneShot2D.tscn" id="17_ilt24"]
+[ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_Intro_Countdown_Final_OneShot2D.tscn" id="18_8qohs"]
 [ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_VOModule_OneShot2D.tscn" id="18_ilt24"]
+[ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_LeadChange_Negative_OneShot2D.tscn" id="19_j8b0f"]
+[ext_resource type="PackedScene" path="res://objects/Global/Audio/SFX_UI_Gamemode_Shared_LeadChange_Positive_OneShot2D.tscn" id="20_kdr20"]
 
 [node name="MP_Abbasid" type="Node3D"]
 
@@ -50,6 +53,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -155.827, 66.9242, 50.0489)
 InitialOwner = 1
 ObjId = 2
 OutlineAbove16Points = true
+CameraFOV = 50
 TacticalAdvicePriorityLevel_Team1 = 1
 TacticalAdvicePriorityLevel_Team2 = 1
 CaptureArea = NodePath("CaptureArea")
@@ -61,6 +65,7 @@ height = 10.0
 
 [node name="CapturePoint_3" parent="Gameplay/Control points" node_paths=PackedStringArray("CaptureArea") instance=ExtResource("7_8qohs")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -81.5577, 61.9042, -13.8698)
+FlagPoleSize = 2
 ObjId = 3
 OutlineAbove16Points = true
 TacticalAdvicePriorityLevel_Team1 = 2
@@ -77,6 +82,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2332, 60.2863, -63.3431)
 InitialOwner = 2
 ObjId = 4
 OutlineAbove16Points = true
+CameraFOV = 50
 TacticalAdvicePriorityLevel_Team1 = 1
 TacticalAdvicePriorityLevel_Team2 = 1
 CaptureArea = NodePath("CaptureArea")
@@ -168,10 +174,32 @@ transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.5152, 0, 3.07727)
 
 [node name="VehicleSpawner" parent="Gameplay/Spawns/HQ_Blu" instance=ExtResource("7_h8og6")]
-transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 53.5949, 2.64622, 28.0115)
+transform = Transform3D(-0.131962, 0, 0.991254, 0, 1, 0, -0.991254, 0, -0.131962, 55.759, 1.24773, 34.371)
 ObjId = 515
-VehicleType = 9
+VehicleType = 12
 P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
+
+[node name="VehicleSpawner2" parent="Gameplay/Spawns/HQ_Blu" instance=ExtResource("7_h8og6")]
+transform = Transform3D(-0.948462, 0, 0.316891, 0, 1, 0, -0.316891, 0, -0.948462, 53.7964, 1.24773, 41.1611)
+ObjId = 515
+VehicleType = 12
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
+
+[node name="VehicleSpawner3" parent="Gameplay/Spawns/HQ_Blu" instance=ExtResource("7_h8og6")]
+transform = Transform3D(-0.998479, 0, 0.0551246, 0, 1, 0, -0.0551246, 0, -0.998479, 55.2244, -0.462212, -5.67908)
+ObjId = 515
+VehicleType = 12
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
+
+[node name="VehicleSpawner4" parent="Gameplay/Spawns/HQ_Blu" instance=ExtResource("7_h8og6")]
+transform = Transform3D(-0.998479, 0, 0.0551246, 0, 1, 0, -0.0551246, 0, -0.998479, 55.8354, -0.0468521, 3.23424)
+ObjId = 515
+VehicleType = 12
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
 
 [node name="HQ_Red" parent="Gameplay/Spawns" node_paths=PackedStringArray("HQArea", "InfantrySpawns") instance=ExtResource("10_7vcn5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 135.642, 62.3528, -64.4833)
@@ -214,7 +242,7 @@ transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.5152, 0, 3.07727)
 
 [node name="Group 2" type="Node3D" parent="Gameplay/Spawns/HQ_Red"]
-transform = Transform3D(-0.707107, 0, 0.707106, 0, 1, 0, -0.707106, 0, -0.707107, -3.6401, 0, 42.313)
+transform = Transform3D(-0.900538, 0, -0.434776, 0, 1, 0, 0.434776, 0, -0.900538, 8.67861, 0, 27.1452)
 
 [node name="SpawnPoint_1_9" parent="Gameplay/Spawns/HQ_Red/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(0.0152535, 0, 0.999884, 0, 1, 0, -0.999884, 0, 0.0152535, 0, 0, -3)
@@ -239,6 +267,34 @@ transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818
 
 [node name="SpawnPoint_1_16" parent="Gameplay/Spawns/HQ_Red/Group 2" instance=ExtResource("11_a8rdj")]
 transform = Transform3D(-0.0841818, 0, 0.99645, 0, 1, 0, -0.99645, 0, -0.0841818, -3.5152, 0, 3.07727)
+
+[node name="VehicleSpawner" parent="Gameplay/Spawns/HQ_Red" instance=ExtResource("7_h8og6")]
+transform = Transform3D(0.131962, 0, -0.991254, 0, 1, 0, 0.991254, 0, 0.131962, -21.3904, 2.11209, -15.8908)
+ObjId = 515
+VehicleType = 8
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
+
+[node name="VehicleSpawner2" parent="Gameplay/Spawns/HQ_Red" instance=ExtResource("7_h8og6")]
+transform = Transform3D(0.131962, 0, -0.991254, 0, 1, 0, 0.991254, 0, 0.131962, -9.36737, 1.82424, -17.4914)
+ObjId = 515
+VehicleType = 8
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
+
+[node name="VehicleSpawner3" parent="Gameplay/Spawns/HQ_Red" instance=ExtResource("7_h8og6")]
+transform = Transform3D(0.145996, 0, -0.989285, 0, 1, 0, 0.989285, 0, 0.145996, -36.004, 2.15659, 37.3734)
+ObjId = 515
+VehicleType = 8
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
+
+[node name="VehicleSpawner4" parent="Gameplay/Spawns/HQ_Red" instance=ExtResource("7_h8og6")]
+transform = Transform3D(0.00177991, 0, -0.999998, 0, 1, 0, 0.999998, 0, 0.00177991, -19.5271, 1.60432, 36.8028)
+ObjId = 515
+VehicleType = 8
+P_AutoSpawnEnabled = true
+P_DefaultRespawnTime = 60
 
 [node name="Sector_CapturePoint-Lettering" parent="Gameplay" node_paths=PackedStringArray("CapturePoints") instance=ExtResource("12_4gnkx")]
 ObjId = 6
@@ -337,6 +393,18 @@ ObjId = 105
 [node name="SFX_UI_Gamemode_Shared_CaptureObjectives_ObjetiveUnlockReveal_OneShot2D" parent="Sounds" instance=ExtResource("16_o6cb1")]
 ObjId = 106
 
+[node name="SFX_UI_Gamemode_Shared_Intro_Countdown_OneShot2D" parent="Sounds" instance=ExtResource("17_ilt24")]
+ObjId = 107
+
+[node name="SFX_UI_Gamemode_Shared_Intro_Countdown_Final_OneShot2D" parent="Sounds" instance=ExtResource("18_8qohs")]
+ObjId = 108
+
+[node name="SFX_UI_Gamemode_Shared_LeadChange_Negative_OneShot2D" parent="Sounds" instance=ExtResource("19_j8b0f")]
+ObjId = 109
+
+[node name="SFX_UI_Gamemode_Shared_LeadChange_Positive_OneShot2D" parent="Sounds" instance=ExtResource("20_kdr20")]
+ObjId = 110
+
 [node name="Voiceover_Global" parent="Sounds" instance=ExtResource("18_ilt24")]
 ObjId = 12
 
@@ -345,7 +413,3 @@ ObjId = 13
 
 [node name="Voiceover_Red" parent="Sounds" instance=ExtResource("18_ilt24")]
 ObjId = 14
-
-[node name="InteractPoint" parent="." instance=ExtResource("8_o6cb1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -277.696, 67.8389, 55.7796)
-ObjId = 1000

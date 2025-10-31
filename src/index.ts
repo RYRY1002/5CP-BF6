@@ -1,5 +1,8 @@
 import * as modlib from "modlib";
-import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu } from "./includes/constants";
+import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu, maxCaptureMultiplier,
+				 capturePoint1NeutralizationTime, capturePoint2NeutralizationTime, capturePoint3NeutralizationTime, capturePoint4NeutralizationTime, capturePoint5NeutralizationTime,
+				 capturePoint1CapturingTime, capturePoint2CapturingTime, capturePoint3CapturingTime, capturePoint4CapturingTime, capturePoint5CapturingTime
+ } from "./includes/constants";
 import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnRevive } from "./includes/scoreboard";
 import { SetupCapturePointUI, SetupTimeUI, UpdateCapturePointUI, UpdateTimeUI } from "./includes/ui";
 
@@ -7,31 +10,19 @@ let firstCapComplete = false;
 let timerWasReset = false;
 
 export async function OnGameModeStarted(): Promise<void> {
+	mod.EnableCapturePointDeploying(capturePoint1, false);
+	mod.EnableCapturePointDeploying(capturePoint2, false);
+	mod.EnableCapturePointDeploying(capturePoint3, false);
+	mod.EnableCapturePointDeploying(capturePoint4, false);
+	mod.EnableCapturePointDeploying(capturePoint5, false);
+
+	mod.SetCapturePointCapturingTime(capturePoint3, 24); // This is only for the first capture
+
 	mod.EnableGameModeObjective(capturePoint1, false);
 	mod.EnableGameModeObjective(capturePoint2, false);
 	mod.EnableGameModeObjective(capturePoint3, true);
 	mod.EnableGameModeObjective(capturePoint4, false);
 	mod.EnableGameModeObjective(capturePoint5, false);
-
-	mod.SetMaxCaptureMultiplier(capturePoint1, 4);
-	mod.SetMaxCaptureMultiplier(capturePoint2, 4);
-	mod.SetMaxCaptureMultiplier(capturePoint3, 4);
-	mod.SetMaxCaptureMultiplier(capturePoint4, 4);
-	mod.SetMaxCaptureMultiplier(capturePoint5, 4);
-
-	mod.SetCapturePointNeutralizationTime(capturePoint1, 2);
-	mod.SetCapturePointNeutralizationTime(capturePoint5, 2);
-
-	mod.SetCapturePointNeutralizationTime(capturePoint2, 12);
-	mod.SetCapturePointNeutralizationTime(capturePoint4, 12);
-
-	mod.SetCapturePointNeutralizationTime(capturePoint3, 0);
-
-	mod.SetCapturePointCapturingTime(capturePoint1, 0);
-	mod.SetCapturePointCapturingTime(capturePoint2, 0);
-	mod.SetCapturePointCapturingTime(capturePoint3, 24);
-	mod.SetCapturePointCapturingTime(capturePoint4, 0);
-	mod.SetCapturePointCapturingTime(capturePoint5, 0);
 
 	SetupScoreboard();
 	SetupTimeUI();
@@ -79,30 +70,33 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 		return mod.Equals(capturingTeam, mod.GetTeam(player));
 	});
 	for (let i = 0; i < mod.CountOf(playersOnPointOnCapturingTeam); i++) {
-		mod.PlaySound(104, 1, mod.ValueInArray(playersOnPointOnCapturingTeam, i)); // SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D
 		UpdateScoreboardForPlayerOnCapturePoint(mod.ValueInArray(playersOnPointOnCapturingTeam, i));
 	}
+	mod.PlaySound(104, 1, capturingTeam); // SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D
 
 	if (!firstCapComplete) {
 		firstCapComplete = true;
 		UpdateCapturePointUI(3, capturingTeam);
 		if (mod.Equals(capturingTeam, teamRed)) {
+			mod.EnableGameModeObjective(capturePoint2, true);
+			mod.SetCapturePointNeutralizationTime(capturePoint2, capturePoint2NeutralizationTime);
+
 			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
 			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
-			mod.EnableGameModeObjective(capturePoint2, true);
 			await mod.Wait(1);
 			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.ObjectiveLocated, mod.VoiceOverFlags.Bravo);
 		}
 		else if (mod.Equals(capturingTeam, teamBlu)) {
+			mod.EnableGameModeObjective(capturePoint4, true);
+			mod.SetCapturePointNeutralizationTime(capturePoint4, capturePoint4NeutralizationTime);
+
 			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamBlu);
 			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamRed);
-			mod.EnableGameModeObjective(capturePoint4, true);
 			await mod.Wait(1);
 			mod.PlayVO(VOGlobal, mod.VoiceOverEvents2D.ObjectiveLocated, mod.VoiceOverFlags.Delta);
 		}
 
-		mod.SetCapturePointNeutralizationTime(capturePoint3, 24);
-		mod.SetCapturePointCapturingTime(capturePoint3, 0);
+		mod.SetCapturePointNeutralizationTime(capturePoint3, 16);
 
 		// We need the if checks again because we need to set capturePoint3's times before playing the next VO
 		await mod.Wait(20);
@@ -124,6 +118,8 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			}
 			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint2, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint2, capturePoint2NeutralizationTime);
+
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Alpha, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Alpha, teamRed);
 			}
@@ -133,6 +129,8 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint1, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint1, capturePoint1NeutralizationTime);
+
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Bravo, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Bravo, teamBlu);
 				await mod.Wait(7);
@@ -140,8 +138,10 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ProgressLateLosing, mod.VoiceOverFlags.Bravo, teamBlu);
 			}
 			else if (mod.Equals(capturingTeam, teamBlu)) {
-				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.EnableGameModeObjective(capturePoint1, false);
+				mod.EnableGameModeObjective(capturePoint3, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint3, capturePoint3NeutralizationTime);
+
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Bravo, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Bravo, teamRed);
 			}
@@ -149,14 +149,18 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 		else if (mod.Equals(eventCapturePoint, capturePoint3)) {
 			UpdateCapturePointUI(3, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
-				mod.EnableGameModeObjective(capturePoint2, true);
 				mod.EnableGameModeObjective(capturePoint4, false);
+				mod.EnableGameModeObjective(capturePoint2, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint2, capturePoint2NeutralizationTime);
+
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
 			}
 			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint2, false);
 				mod.EnableGameModeObjective(capturePoint4, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint4, capturePoint4NeutralizationTime);
+
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamRed);
 			}
@@ -164,14 +168,18 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 		else if (mod.Equals(eventCapturePoint, capturePoint4)) {
 			UpdateCapturePointUI(4, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
-				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.EnableGameModeObjective(capturePoint5, false);
+				mod.EnableGameModeObjective(capturePoint3, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint3, capturePoint3NeutralizationTime);
+
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Delta, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Delta, teamBlu);
 			}
 			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint5, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint5, capturePoint5NeutralizationTime);
+
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Delta, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Delta, teamRed);
 				await mod.Wait(7);
@@ -183,6 +191,8 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			UpdateCapturePointUI(5, capturingTeam);
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint4, true);
+				mod.SetCapturePointNeutralizationTime(capturePoint4, capturePoint4NeutralizationTime);
+
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Echo, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Echo, teamBlu);
 			}
@@ -190,6 +200,24 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EndGameMode(teamBlu);
 			}
 		}
+	}
+}
+
+export async function OnCapturePointLost(eventCapturePoint: mod.CapturePoint): Promise<void> {
+	if (mod.Equals(eventCapturePoint, capturePoint1)) {
+		mod.SetCapturePointCapturingTime(capturePoint1, capturePoint1CapturingTime);
+	}
+	else if (mod.Equals(eventCapturePoint, capturePoint2)) {
+		mod.SetCapturePointCapturingTime(capturePoint2, capturePoint2CapturingTime);
+	}
+	else if (mod.Equals(eventCapturePoint, capturePoint3)) {
+		mod.SetCapturePointCapturingTime(capturePoint3, capturePoint3CapturingTime);
+	}
+	else if (mod.Equals(eventCapturePoint, capturePoint4)) {
+		mod.SetCapturePointCapturingTime(capturePoint4, capturePoint4CapturingTime);
+	}
+	else if (mod.Equals(eventCapturePoint, capturePoint5)) {
+		mod.SetCapturePointCapturingTime(capturePoint5, capturePoint5CapturingTime);
 	}
 }
 

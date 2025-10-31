@@ -7,9 +7,11 @@ export const capturePoint5 = mod.GetCapturePoint(5);
 export const teamRed = mod.GetTeam(2);
 export const teamBlu = mod.GetTeam(1);
 
-export const capturesPlayerVar = 0;
-export const defensesPlayerVar = 1;
-export const revivesPlayerVar = 2;
+export const capturesPlayerVar: Map<mod.Player, number> = new Map();
+export const killsPlayerVar: Map<mod.Player, number> = new Map();
+export const assistsPlayerVar: Map<mod.Player, number> = new Map();
+export const revivesPlayerVar: Map<mod.Player, number> = new Map();
+export const undeploysPlayerVar: Map<mod.Player, number> = new Map();
 
 export const VOGlobal = mod.GetVO(12);
 export const VOBlu = mod.GetVO(13);

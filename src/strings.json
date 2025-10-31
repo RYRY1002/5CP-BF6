@@ -1,12 +1,13 @@
 {
   "scoreboard": {
-    "red": "Red",
-    "blu": "Blu",
+    "red": "PAX Armata",
+    "blu": "NATO",
     "score": "Score",
     "captures": "Captures",
-    "defenses": "Defenses",
     "kills": "Kills",
-    "revives": "Revives"
+    "assists": "Assists",
+    "revives": "Revives",
+    "deaths": "Deaths"
   },
   "ui": {
     "timer": "{} : {}{}",

@@ -1,14 +1,16 @@
 import * as modlib from "modlib";
-import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, capturesPlayerVar, defensesPlayerVar, revivesPlayerVar } from "./constants";
+import { capturesPlayerVar, killsPlayerVar, assistsPlayerVar, revivesPlayerVar, undeploysPlayerVar } from "./constants";
 
 export function SetupScoreboard(): void {
   mod.SetScoreboardHeader(mod.Message(mod.stringkeys.scoreboard.blu), mod.Message(mod.stringkeys.scoreboard.red));
   mod.SetScoreboardColumnNames(
     mod.Message(mod.stringkeys.scoreboard.captures),
-    mod.Message(mod.stringkeys.scoreboard.defenses),
     mod.Message(mod.stringkeys.scoreboard.kills),
-    mod.Message(mod.stringkeys.scoreboard.revives)
+    mod.Message(mod.stringkeys.scoreboard.assists),
+    mod.Message(mod.stringkeys.scoreboard.revives),
+    mod.Message(mod.stringkeys.scoreboard.deaths)
   );
+  mod.SetScoreboardSorting(1, false); // Sort by captures, descending
 
   // There is a bug where players' scoreboard values persist between rounds, so we need to reset them here until this is fixed by BF Studios.
   let allPlayers = mod.AllPlayers();
@@ -21,40 +23,38 @@ export function SetupScoreboard(): void {
 }
 
 export function UpdateScoreboardForPlayerOnCapturePoint(playerOnCapturePoint: mod.Player): void {
-  mod.SetVariable(mod.ObjectVariable(playerOnCapturePoint, capturesPlayerVar), mod.GetVariable(mod.ObjectVariable(playerOnCapturePoint, capturesPlayerVar)) + 1);
+  capturesPlayerVar.set(playerOnCapturePoint, (capturesPlayerVar.get(playerOnCapturePoint) || 0) + 1);
   UpdateScoreboardForPlayer(playerOnCapturePoint);
 }
 
+export function UpdateScoreboardForPlayerOnKill(killingPlayer: mod.Player, killedPlayer: mod.Player): void {
+  if (killingPlayer != killedPlayer) {
+    killsPlayerVar.set(killingPlayer, (killsPlayerVar.get(killingPlayer) || 0) + 1);
+    UpdateScoreboardForPlayer(killingPlayer);
+  }
+}
+
+export function UpdateScoreboardForPlayerOnKillAssist(assistingPlayer: mod.Player): void {
+  assistsPlayerVar.set(assistingPlayer, (assistsPlayerVar.get(assistingPlayer) || 0) + 1);
+  UpdateScoreboardForPlayer(assistingPlayer);
+}
+
 export function UpdateScoreboardForPlayerOnRevive(revivingPlayer: mod.Player): void {
-  mod.SetVariable(mod.ObjectVariable(revivingPlayer, revivesPlayerVar), mod.GetVariable(mod.ObjectVariable(revivingPlayer, revivesPlayerVar)) + 1);
+  revivesPlayerVar.set(revivingPlayer, (revivesPlayerVar.get(revivingPlayer) || 0) + 1);
   UpdateScoreboardForPlayer(revivingPlayer);
 }
 
-export function UpdateScoreboardForPlayerOnKill(killingPlayer: mod.Player, killedPlayer: mod.Player): void {
-  if (mod.GetCurrentOwnerTeam(capturePoint5) === mod.GetTeam(killingPlayer)) {
-    //let isKillerOnOwnedPoint = false;
-    let isVictimOnUnownedPoint = false;
-    for (let i = 0; i < mod.CountOf(mod.GetPlayersOnPoint(capturePoint5)); i++) {
-      /*if (mod.Equals(mod.ValueInArray(mod.GetPlayersOnPoint(capturePoint5), i), eventPlayer)) {
-        isKillerOnOwnedPoint = true;
-      }*/
-      if (mod.Equals(mod.ValueInArray(mod.GetPlayersOnPoint(capturePoint5), i), killedPlayer)) {
-        isVictimOnUnownedPoint = true;
-      }
-    }
-    if (isVictimOnUnownedPoint) {
-      mod.SetVariable(mod.ObjectVariable(killingPlayer, defensesPlayerVar), mod.GetVariable(mod.ObjectVariable(killingPlayer, defensesPlayerVar)) + 1);
-    }
-  }
-
-  UpdateScoreboardForPlayer(killingPlayer);
+export function UpdateScoreboardForPlayerOnUndeploy(undeployingPlayer: mod.Player): void {
+  undeploysPlayerVar.set(undeployingPlayer, (undeploysPlayerVar.get(undeployingPlayer) || 0) + 1);
+  UpdateScoreboardForPlayer(undeployingPlayer);
 }
 
 export function UpdateScoreboardForPlayer(player: mod.Player): void {
   mod.SetScoreboardPlayerValues(player,
-    mod.GetVariable(mod.ObjectVariable(player, capturesPlayerVar)),
-    mod.GetVariable(mod.ObjectVariable(player, defensesPlayerVar)),
-    mod.GetPlayerKills(player),
-    mod.GetVariable(mod.ObjectVariable(player, revivesPlayerVar))
+    capturesPlayerVar.get(player) || 0,
+    killsPlayerVar.get(player) || 0,
+    assistsPlayerVar.get(player) || 0,
+    revivesPlayerVar.get(player) || 0,
+    undeploysPlayerVar.get(player) || 0
   );
 }

@@ -1,20 +1,16 @@
 import * as modlib from "modlib";
-import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu, maxCaptureMultiplier,
+import { capturePoint1, capturePoint2, capturePoint3, capturePoint4, capturePoint5, teamRed, teamBlu, VOGlobal, VORed, VOBlu,
 				 capturePoint1NeutralizationTime, capturePoint2NeutralizationTime, capturePoint3NeutralizationTime, capturePoint4NeutralizationTime, capturePoint5NeutralizationTime,
 				 capturePoint1CapturingTime, capturePoint2CapturingTime, capturePoint3CapturingTime, capturePoint4CapturingTime, capturePoint5CapturingTime
  } from "./includes/constants";
-import { SetupScoreboard, UpdateScoreboardForPlayer, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnRevive } from "./includes/scoreboard";
+import { SetupScoreboard, UpdateScoreboardForPlayerOnCapturePoint, UpdateScoreboardForPlayerOnKill, UpdateScoreboardForPlayerOnKillAssist, UpdateScoreboardForPlayerOnRevive, UpdateScoreboardForPlayerOnUndeploy } from "./includes/scoreboard";
 import { SetupCapturePointUI, SetupTimeUI, UpdateCapturePointUI, UpdateTimeUI } from "./includes/ui";
 
 let firstCapComplete = false;
 let timerWasReset = false;
 
 export async function OnGameModeStarted(): Promise<void> {
-	mod.EnableCapturePointDeploying(capturePoint1, false);
-	mod.EnableCapturePointDeploying(capturePoint2, false);
 	mod.EnableCapturePointDeploying(capturePoint3, false);
-	mod.EnableCapturePointDeploying(capturePoint4, false);
-	mod.EnableCapturePointDeploying(capturePoint5, false);
 
 	mod.SetCapturePointCapturingTime(capturePoint3, 24); // This is only for the first capture
 
@@ -65,13 +61,13 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 	ResetTime();
 
 	let capturingTeam = mod.GetCurrentOwnerTeam(eventCapturePoint);
+	let playersOnCapturePoint: Array<mod.Player> = modlib.ConvertArray(mod.GetPlayersOnPoint(eventCapturePoint));
 
-	let playersOnPointOnCapturingTeam = modlib.FilteredArray(mod.GetPlayersOnPoint(eventCapturePoint), (player) => {
-		return mod.Equals(capturingTeam, mod.GetTeam(player));
+	playersOnCapturePoint.forEach((player) => {
+		if (mod.Equals(mod.GetTeam(player), teamBlu)) {
+			UpdateScoreboardForPlayerOnCapturePoint(player);
+		}
 	});
-	for (let i = 0; i < mod.CountOf(playersOnPointOnCapturingTeam); i++) {
-		UpdateScoreboardForPlayerOnCapturePoint(mod.ValueInArray(playersOnPointOnCapturingTeam, i));
-	}
 	mod.PlaySound(104, 1, capturingTeam); // SFX_UI_Gamemode_Shared_CaptureObjectives_OnCapturedByFriendly_OneShot2D
 
 	if (!firstCapComplete) {
@@ -80,6 +76,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 		if (mod.Equals(capturingTeam, teamRed)) {
 			mod.EnableGameModeObjective(capturePoint2, true);
 			mod.SetCapturePointNeutralizationTime(capturePoint2, capturePoint2NeutralizationTime);
+			mod.EnableCapturePointDeploying(capturePoint2, false);
 
 			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
 			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
@@ -89,6 +86,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 		else if (mod.Equals(capturingTeam, teamBlu)) {
 			mod.EnableGameModeObjective(capturePoint4, true);
 			mod.SetCapturePointNeutralizationTime(capturePoint4, capturePoint4NeutralizationTime);
+			mod.EnableCapturePointDeploying(capturePoint4, false);
 
 			mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamBlu);
 			mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamRed);
@@ -119,6 +117,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			else if (mod.Equals(capturingTeam, teamBlu)) {
 				mod.EnableGameModeObjective(capturePoint2, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint2, capturePoint2NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint2, false);
 
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Alpha, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Alpha, teamRed);
@@ -130,6 +129,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint1, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint1, capturePoint1NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint1, false);
 
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Bravo, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Bravo, teamBlu);
@@ -141,6 +141,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EnableGameModeObjective(capturePoint1, false);
 				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint3, capturePoint3NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint3, false);
 
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Bravo, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Bravo, teamRed);
@@ -152,6 +153,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EnableGameModeObjective(capturePoint4, false);
 				mod.EnableGameModeObjective(capturePoint2, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint2, capturePoint2NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint2, false);
 
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamBlu);
@@ -160,6 +162,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EnableGameModeObjective(capturePoint2, false);
 				mod.EnableGameModeObjective(capturePoint4, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint4, capturePoint4NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint4, false);
 
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Charlie, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Charlie, teamRed);
@@ -171,6 +174,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EnableGameModeObjective(capturePoint5, false);
 				mod.EnableGameModeObjective(capturePoint3, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint3, capturePoint3NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint3, false);
 
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Delta, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Delta, teamBlu);
@@ -179,6 +183,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 				mod.EnableGameModeObjective(capturePoint3, false);
 				mod.EnableGameModeObjective(capturePoint5, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint5, capturePoint5NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint5, false);
 
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Delta, teamBlu);
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Delta, teamRed);
@@ -192,6 +197,7 @@ export async function OnCapturePointCaptured(eventCapturePoint: mod.CapturePoint
 			if (mod.Equals(capturingTeam, teamRed)) {
 				mod.EnableGameModeObjective(capturePoint4, true);
 				mod.SetCapturePointNeutralizationTime(capturePoint4, capturePoint4NeutralizationTime);
+				mod.EnableCapturePointDeploying(capturePoint4, false);
 
 				mod.PlayVO(VORed, mod.VoiceOverEvents2D.ObjectiveCaptured, mod.VoiceOverFlags.Echo, teamRed);
 				mod.PlayVO(VOBlu, mod.VoiceOverEvents2D.ObjectiveCapturedEnemy, mod.VoiceOverFlags.Echo, teamBlu);
@@ -230,11 +236,22 @@ export async function OnPlayerEarnedKill(
 	UpdateScoreboardForPlayerOnKill(eventPlayer, eventOtherPlayer);
 }
 
+export async function OnPlayerEarnedKillAssist(
+	eventPlayer: mod.Player, // Player who earned the assist
+	eventOtherPlayer: mod.Player
+): Promise<void> {
+	UpdateScoreboardForPlayerOnKillAssist(eventPlayer);
+}
+
 export async function OnRevived(
 	eventPlayer: mod.Player, // Player who was revived
 	eventOtherPlayer: mod.Player // Player who did the reviving
 ): Promise<void> {
 	UpdateScoreboardForPlayerOnRevive(eventOtherPlayer);
+}
+
+export async function OnPlayerUndeploy(eventPlayer: mod.Player): Promise<void> {
+	UpdateScoreboardForPlayerOnUndeploy(eventPlayer);
 }
 
 export async function OnPlayerEnterCapturePoint(eventPlayer: mod.Player, eventCapturePoint: mod.CapturePoint): Promise<void> {
